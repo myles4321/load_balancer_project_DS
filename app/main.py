@@ -11,5 +11,10 @@ def home():
 def getname():
     return f"Hello from server: {socket.gethostname()}"
 
+@app.route('/heartbeat')
+def heartbeat():
+    return ""
+   
+
 if __name__ == '__main__':
     app.run(debug=True)
