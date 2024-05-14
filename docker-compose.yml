@@ -6,10 +6,16 @@ services:
       context: app
     ports:
       - "5000"
+  load_balancer:
+    build:
+      context: app/
   nginx:
     image: nginx:latest
+    container_name: container1
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    privileged: true
+  
     depends_on:
       - app
     ports:    
