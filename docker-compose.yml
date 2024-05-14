@@ -6,6 +6,9 @@ services:
       context: app
     ports:
       - "5000"
+  load_balancer:
+    build:
+      context: app/
   nginx:
     image: nginx:latest
     container_name: container1
