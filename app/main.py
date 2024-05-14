@@ -40,5 +40,47 @@ def heartbeat():
     """
     return "", 200
 
+@app.route('/rep')
+def get_replicas():
+    """
+    Endpoint to get the list of current server replicas.
+    """
+    response_data = {
+        'message': {
+            'N': len(server_replicas),  # Number of replicas
+            'replicas': server_replicas  # List of replicas
+        },
+        'status': 'successful'
+    }
+    return jsonify(response_data), 200
+
+@app.route('/add', methods=['POST'])
+def add_replica():
+    """
+    Endpoint to add new server replicas.
+    """
+    data = request.get_json()  
+    n = data.get('n')  
+    hostnames = data.get('hostnames')  
+
+    if len(hostnames) > n:
+        return jsonify({
+            'message': 'Error, number of hostnames is greater than newly added instances',
+            'status': 'failure'
+        }), 400
+    else:
+        for hostname in hostnames:
+            server_replicas.append(hostname)
+            hashing.add_node(hostname)
+
+        response_data = {
+            'message': {
+                'N': len(server_replicas), 
+                'replicas': server_replicas 
+            },
+            'status': 'successful',
+        }
+        return jsonify(response_data), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
