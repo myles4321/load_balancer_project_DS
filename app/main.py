@@ -82,5 +82,54 @@ def add_replica():
         }
         return jsonify(response_data), 200
 
-if __name__ == '__main__':
+@app.route('/rm', methods=['DELETE'])
+def remove_replicas():
+    """
+    Endpoint to remove existing server replicas.
+    """
+    data = request.get_json()  
+    n = data.get('n')  
+    hostnames = data.get('hostnames') 
+
+    # Validate the input
+    if len(hostnames) > n:
+        return jsonify({
+            'message': 'Error, number of hostnames is greater than removable instances',
+            'status': 'failed'
+        }), 400
+    else:
+        for hostname in hostnames:
+            if hostname in server_replicas:
+                server_replicas.remove(hostname)
+                hashing.remove_node(hostname)
+
+        response_data = {
+            'message': {
+                'N': len(server_replicas),  
+                'replicas': server_replicas 
+            },
+            'status': 'successful'
+        }
+        return jsonify(response_data), 200
+
+@app.route('/<path>')
+def route_to_replica(path):
+    """
+    Endpoint to route a request to a specific server based on the path.
+    """
+    # Validate the path
+    if path != 'home':
+        return jsonify({
+            'message': 'Error, endpoint does not exist in server replicas',
+            'status': 'failure'
+        }), 400
+    else:
+        node_id = hashing.get_node(hash(path))
+        return jsonify({
+            'message': f'Hello from server: {node_id}',
+            'status': 'successful'
+        }), 200
+
+if __name__ == '_main_':
+    logging.basicConfig(level=logging.DEBUG)  
     app.run(debug=True)
