@@ -136,4 +136,4 @@ def route_to_replica(path):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)  # Enable debug logging
-    app.run(debug=True)  # Run the Flask application in debug mode
+    app.run(debug=True)  # Run the Flask application in debug mode commenting out the line below
