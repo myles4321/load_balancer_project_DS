@@ -59,24 +59,26 @@ def add_replica():
     """
     Endpoint to add new server replicas.
     """
-    data = request.get_json()  
-    n = data.get('n')  
-    hostnames = data.get('hostnames')  
+    data = request.get_json()  # Get the JSON data from the request
+    n = data.get('n')  # Number of replicas to add
+    hostnames = data.get('hostnames')  # List of hostnames to add
 
+    # Validate the input
     if len(hostnames) > n:
         return jsonify({
             'message': 'Error, number of hostnames is greater than newly added instances',
             'status': 'failure'
         }), 400
     else:
+        # Add the new hostnames to the replicas and consistent hashing ring
         for hostname in hostnames:
             server_replicas.append(hostname)
             hashing.add_node(hostname)
 
         response_data = {
             'message': {
-                'N': len(server_replicas), 
-                'replicas': server_replicas 
+                'N': len(server_replicas),  # Updated number of replicas
+                'replicas': server_replicas  # Updated list of replicas
             },
             'status': 'successful',
         }
@@ -87,17 +89,18 @@ def remove_replicas():
     """
     Endpoint to remove existing server replicas.
     """
-    data = request.get_json()  
-    n = data.get('n')  
-    hostnames = data.get('hostnames') 
+    data = request.get_json()  # Get the JSON data from the request
+    n = data.get('n')  # Number of replicas to remove
+    hostnames = data.get('hostnames')  # List of hostnames to remove
 
     # Validate the input
     if len(hostnames) > n:
         return jsonify({
             'message': 'Error, number of hostnames is greater than removable instances',
-            'status': 'failed'
+            'status': 'failure'
         }), 400
     else:
+        # Remove the hostnames from the replicas and consistent hashing ring
         for hostname in hostnames:
             if hostname in server_replicas:
                 server_replicas.remove(hostname)
@@ -105,8 +108,8 @@ def remove_replicas():
 
         response_data = {
             'message': {
-                'N': len(server_replicas),  
-                'replicas': server_replicas 
+                'N': len(server_replicas),  # Updated number of replicas
+                'replicas': server_replicas  # Updated list of replicas
             },
             'status': 'successful'
         }
@@ -120,10 +123,11 @@ def route_to_replica(path):
     # Validate the path
     if path != 'home':
         return jsonify({
-            'message': 'Error, endpoint does not exist in server replicas',
+            'message': f'Error, {path} endpoint does not exist in server replicas',
             'status': 'failure'
-        }), 400
+        }), 
     else:
+        # Get the node responsible for the hashed value of the path
         node_id = hashing.get_node(hash(path))
         return jsonify({
             'message': f'Hello from server: {node_id}',
@@ -131,5 +135,5 @@ def route_to_replica(path):
         }), 200
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)  
-    app.run(debug=True)
+    logging.basicConfig(level=logging.DEBUG)  # Enable debug logging
+    app.run(debug=True)  # Run the Flask application in debug mode

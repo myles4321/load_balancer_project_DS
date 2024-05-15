@@ -1,7 +1,7 @@
 import hashlib
 
 class ConsistentHashing:
-    def _init_(self, num_slots=512):
+    def __init__(self, num_slots=512):
         """
         Initialize the ConsistentHashing class.
         
@@ -25,7 +25,7 @@ class ConsistentHashing:
         # Convert the node identifier to a hash value using MD5
         node_hash = int(hashlib.md5(node.encode('utf-8')).hexdigest(), 16)
         # Calculate the position of the virtual node on the hash ring
-        return (node_hash + replica + 2 * replica**2 + 25) % self.num_slots
+        return (node_hash**2 + replica**2 + 2 * replica + 25) % self.num_slots
 
     def add_node(self, node):
         """
