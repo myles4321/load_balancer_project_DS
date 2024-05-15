@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from consistent_hashing import ConsistentHashing
 import logging
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Initialize Consistent Hashing
 hashing = ConsistentHashing()
@@ -130,6 +130,6 @@ def route_to_replica(path):
             'status': 'successful'
         }), 200
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)  
     app.run(debug=True)
