@@ -1,3 +1,4 @@
+import hashlib
 from flask import Flask, request, jsonify
 from consistent_hashing import ConsistentHashing
 import logging
@@ -8,10 +9,22 @@ app = Flask(__name__)
 hashing = ConsistentHashing()
 
 # Predefined server replicas
-server_replicas = ['server1', 'server2', 'server3']
+server_replicas = ["Server1", "Server2", "Server3"]
 # Add the predefined server replicas to the consistent hashing ring
 for server in server_replicas:
     hashing.add_node(server)
+
+def get_hash(key):
+    """
+    Get a hash value for the given key using MD5.
+    
+    Parameters:
+    key (str): The key to hash.
+    
+    Returns:
+    int: The hashed key value.
+    """
+    return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16)
 
 @app.route('/')
 def home():
@@ -25,8 +38,9 @@ def getname():
     """
     Endpoint to get a greeting message from a specific server.
     """
-    # Get the node responsible for the hashed value of 'home'
-    node_id = hashing.get_node(hash('home'))
+    unique_id = request.args.get('id', 'default_id')
+    key = f"{request.remote_addr}_{unique_id}"  # Use remote address and query param for hashing
+    node_id = hashing.get_node(get_hash(key))
     response_data = {
         'message': f'Hello from server: {node_id}',
         'status': 'successful'
@@ -63,6 +77,8 @@ def add_replica():
     n = data.get('n')  # Number of replicas to add
     hostnames = data.get('hostnames')  # List of hostnames to add
 
+    logging.debug(f"Adding {n} replicas: {hostnames}")
+
     # Validate the input
     if len(hostnames) > n:
         return jsonify({
@@ -72,8 +88,10 @@ def add_replica():
     else:
         # Add the new hostnames to the replicas and consistent hashing ring
         for hostname in hostnames:
-            server_replicas.append(hostname)
-            hashing.add_node(hostname)
+            if hostname not in server_replicas:
+                server_replicas.append(hostname)
+                hashing.add_node(hostname)
+                logging.debug(f"Added replica: {hostname}")
 
         response_data = {
             'message': {
@@ -82,6 +100,7 @@ def add_replica():
             },
             'status': 'successful',
         }
+        logging.debug(f"Updated replicas list: {server_replicas}")
         return jsonify(response_data), 200
 
 @app.route('/rm', methods=['DELETE'])
@@ -92,6 +111,8 @@ def remove_replicas():
     data = request.get_json()  # Get the JSON data from the request
     n = data.get('n')  # Number of replicas to remove
     hostnames = data.get('hostnames')  # List of hostnames to remove
+
+    logging.debug(f"Removing {n} replicas: {hostnames}")
 
     # Validate the input
     if len(hostnames) > n:
@@ -105,6 +126,7 @@ def remove_replicas():
             if hostname in server_replicas:
                 server_replicas.remove(hostname)
                 hashing.remove_node(hostname)
+                logging.debug(f"Removed replica: {hostname}")
 
         response_data = {
             'message': {
@@ -113,6 +135,7 @@ def remove_replicas():
             },
             'status': 'successful'
         }
+        logging.debug(f"Updated replicas list: {server_replicas}")
         return jsonify(response_data), 200
 
 @app.route('/<path>')
@@ -125,10 +148,10 @@ def route_to_replica(path):
         return jsonify({
             'message': f'Error, {path} endpoint does not exist in server replicas',
             'status': 'failure'
-        }), 
+        }), 400
     else:
         # Get the node responsible for the hashed value of the path
-        node_id = hashing.get_node(hash(path))
+        node_id = hashing.get_node(get_hash(path))
         return jsonify({
             'message': f'Hello from server: {node_id}',
             'status': 'successful'
