@@ -9,7 +9,7 @@ app = Flask(__name__)
 hashing = ConsistentHashing()
 
 # Predefined server replicas
-server_replicas = []
+server_replicas = ["Server1", "Server2", "Server3"]
 # Add the predefined server replicas to the consistent hashing ring
 for server in server_replicas:
     hashing.add_node(server)
