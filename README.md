@@ -42,7 +42,7 @@ This project demonstrates the implementation of a load balancer using consistent
    Use Docker Compose to build and run the application.
 
    ```sh
-   docker-compose up
+   docker-compose up --build
    ```
 
    This will start the Flask application and an Nginx load balancer.
