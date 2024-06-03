@@ -57,11 +57,25 @@ This project demonstrates the implementation of a load balancer using consistent
 
 - **`GET /rep`**: Returns the list of current server replicas.
 
+## API Endpoints
+
 - **`POST /add`**: Adds new server replicas.
-  - Request body: `{"n": <number_of_replicas>, "hostnames": <list_of_hostnames>}`
+  - Request body:
+    ```json
+    {
+      "n": "<number_of_replicas>",
+      "hostnames": "<list_of_hostnames>"
+    }
+    ```
 
 - **`DELETE /rm`**: Removes existing server replicas.
-  - Request body: `{"n": <number_of_replicas>, "hostnames": <list_of_hostnames>}`
+  - Request body:
+    ```json
+    {
+      "n": "<number_of_replicas>",
+      "hostnames": "<list_of_hostnames>"
+    }
+    ```
 
 - **`GET /<path>`**: Routes a request to a specific server based on the path.
 
