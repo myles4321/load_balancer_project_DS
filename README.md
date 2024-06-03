@@ -63,7 +63,7 @@ This project demonstrates the implementation of a load balancer using consistent
   - Request body:
     ```json
     {
-      "n": <number_of_replicas>,
+      "n": "<number_of_replicas>",
       "hostnames": "<list_of_hostnames>"
     }
     ```
@@ -72,7 +72,7 @@ This project demonstrates the implementation of a load balancer using consistent
   - Request body:
     ```json
     {
-      "n": <number_of_replicas>,
+      "n": "<number_of_replicas>",
       "hostnames": "<list_of_hostnames>"
     }
     ```
