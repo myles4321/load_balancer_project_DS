@@ -81,19 +81,19 @@ This project demonstrates the implementation of a load balancer using consistent
 
 # Images of implementation
 ## /rep endpoint
-![alt text](images/rependpoint.jpg)
+![alt text](/images/rependpoint.jpg)
 
 ## /home
-![alt text](images/home.png)
+![alt text](/images/home.png)
 
 ## /add
-![alt text](images/add.png)
+![alt text](/images/add.png)
 
 ## /rm
-![alt text](images/rm.png)
+![alt text](/images/rm.png)
 
 ## when the number of hostnames is greater than the servers
-![alt text](images/image.png)
+![alt text](/images/image.png)
 
 ## Conclusion
 
