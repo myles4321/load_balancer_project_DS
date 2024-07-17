@@ -79,6 +79,10 @@ This project demonstrates the implementation of a load balancer using consistent
 
 - **`GET /<path>`**: Routes a request to a specific server based on the path.
 
+# Images of implementation
+## /rep endpoint
+![alt text](pic1.jpg)
+
 ## Conclusion
 
 This project showcases the implementation of a load balancer using consistent hashing to distribute requests evenly across a cluster of servers. By using Flask for the web application and Docker for containerization, the project ensures easy deployment and management. The provided API endpoints allow dynamic management of server replicas, making it a robust solution for handling distributed requests in a scalable manner.
