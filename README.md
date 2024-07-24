@@ -140,14 +140,14 @@ This section is to test how the load balancer is distributing the load to the di
 **Disclaimer:** When running the test file, ensure to change the num_requests parameter to change the number of requests that you would like to test for.
 
 ## Testing the load balancer with N=3 and num_requests=1000
-**Response from the terminal**
+**Response from the terminal** <br>
 ![alt text](images/terminal_1k.png) <br><br>
 **Plot**<br>
 ![alt text](images/1k_reqs.png)
 <br><br>
 
 ## Testing the load balancer with N=3 and num_requests=10000
-**Response from the terminal**
+**Response from the terminal** <br>
 ![alt text](images/terminal_10k.png) <br><br>
 **Plot**<br>
 ![alt text](images/10k_reqs.png)
