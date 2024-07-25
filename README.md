@@ -151,6 +151,11 @@ This section is to test how the load balancer is distributing the load to the di
 ![alt text](images/terminal_10k.png) <br><br>
 **Plot**<br>
 ![alt text](images/10k_reqs.png)
+<br><br>
+
+## Number of requests per server from N=3 to N=4 and num_requests=10000
+**Plot**<br>
+![alt text](images/analysis.png)
 
 
 <br><br>
