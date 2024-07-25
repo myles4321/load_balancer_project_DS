@@ -26,7 +26,7 @@ This project demonstrates the implementation of a load balancer using consistent
 
    ```sh
    python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   source venv/bin/activate 
    ```
 
 3. **Install Requirements**
@@ -53,18 +53,59 @@ This project demonstrates the implementation of a load balancer using consistent
 
 - **`GET /home`**: Returns a greeting message from a specific server.
 
-- **`GET /heartbeat`**: Checks if the server is alive.
-
 - **`GET /rep`**: Returns the list of current server replicas.
 
-## API Endpoints
+- **`POST /add`**: Adds replicas to the load balancer.
 
-- **`POST /add`**: Adds new server replicas.
+- **`DELETE /rm`**: Removes defined replicas from the load balancer.
+
+## API Endpoints Testing
+- **`GET /home`**: Returns a greeting message from a specific server
+  - Response:
+    ```json
+    {
+      "message": "Hello from server: <serverID>",
+      "status": "succesful"
+    }
+    ```
+
+- **`GET /rep`**: Returns the list of current server replicas.
+  - Response:
+    ```json
+    {
+      "message": {
+      "N" : 4,
+      "replicas": [
+        "server1",
+        "server2",
+        "server3",
+      ]
+    },
+    "status": "succesful"
+    }
+    ```
+
+- **`POST /add`**: Adds new server replicas. Assuming the load balancer started with 3 servers: [server1, server2. server3]
   - Request body:
     ```json
     {
-      "n": "<number_of_replicas>",
-      "hostnames": "<list_of_hostnames>"
+      "n": 1,
+      "hostnames": ["s4"]
+    }
+    ```
+  - Response:
+    ```json
+    {
+      "message": {
+      "N" : 4,
+      "replicas": [
+        "server1",
+        "server2",
+        "server3",
+        "s4"
+      ]
+    },
+    "status": "succesful"
     }
     ```
 
@@ -72,28 +113,47 @@ This project demonstrates the implementation of a load balancer using consistent
   - Request body:
     ```json
     {
-      "n": "<number_of_replicas>",
-      "hostnames": "<list_of_hostnames>"
+      "n": 1,
+      "hostnames": ["s4"]
     }
     ```
+  - Response:
+    ```json
+    {
+      "message": {
+      "N" : 3,
+      "replicas": [
+        "server1",
+        "server2",
+        "server3",
+      ]
+    },
+    "status": "succesful"
+    }
 
-- **`GET /<path>`**: Routes a request to a specific server based on the path.
 
-# Images of implementation
-## /rep endpoint
-![alt text](rependpoint.jpg)
+<br>
 
-## /home
-![alt text](home.png)
+# Analysis
+This section is to test how the load balancer is distributing the load to the different servers that are available. To run this test, you will open the tests folder and run the test script using
+`python test.py`. <br><br>
+**Disclaimer:** When running the test file, ensure to change the num_requests parameter to change the number of requests that you would like to test for.
 
-## /add
-![alt text](add.png)
+## Testing the load balancer with N=3 and num_requests=1000
+**Response from the terminal** <br>
+![alt text](images/terminal_1k.png) <br><br>
+**Plot**<br>
+![alt text](images/1k_reqs.png)
+<br><br>
 
-## /rm
-![alt text](rm.png)
+## Testing the load balancer with N=3 and num_requests=10000
+**Response from the terminal** <br>
+![alt text](images/terminal_10k.png) <br><br>
+**Plot**<br>
+![alt text](images/10k_reqs.png)
 
-## when the number of hostnames is greater than the servers
-![alt text](image.png)
+
+<br><br>
 
 ## Conclusion
 
